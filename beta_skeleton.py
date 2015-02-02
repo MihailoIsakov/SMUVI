@@ -23,17 +23,20 @@ class BetaSkeleton():
 
 def create_brute_skeleton(points, beta=1):
     for a in points:
+        a.clear_connections()
         for b in points:
-            can_connect = True
-            for c in points:
-                angle = get_angle(a.p, b.p, c.p)
-                if angle < beta:
-                    can_connect = False
-                    break
+            if a is not b:
+                can_connect = True
+                for c in points:
+                    if c is not a and c is not b:
+                        angle = get_angle(a.p, b.p, c.p)
+                        if angle > beta:
+                            can_connect = False
+                            break
 
-            if can_connect:
-                a.connections.append(b)
-                b.connections.append(a)
+                if can_connect:
+                    a.connections.append(b)
+                    b.connections.append(a)
 
 
 def get_angle(p1, p2, p3):
