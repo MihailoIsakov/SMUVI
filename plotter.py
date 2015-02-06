@@ -14,8 +14,8 @@ def plot_graph(graph):
     plt.show()
 
 
-def plot_arrows(graph):
-    plt.figure(1)
+def plot_arrows(graph, fig):
+
     ax = plt.axes()
     for p in graph.points:
         x = p.x
@@ -29,4 +29,37 @@ def plot_arrows(graph):
     plt.show()
 
 
+def start_gui():
+    global graph
+    from sphereofinfluence import SoIGraph
+    graph = SoIGraph.randomize(0, 0, 0)
 
+    fig = plt.figure(1)
+    ax = fig.add_subplot(111)
+    ax.set_title('click to build line segments')
+    line, = ax.plot([0, 100], [0, 100], 'b.')  # empty line
+    pointbuilder = PointBuilder(line, graph)
+
+
+class PointBuilder:
+    def __init__(self, points, graph):
+        self.points = points
+        self.graph = graph
+        self.cid = points.figure.canvas.mpl_connect('button_press_event', self)
+
+    def __call__(self, event):
+        print 'click', event
+        if event.inaxes!=self.points.axes: return
+        self.graph.add_point(event.xdata, event.ydata)
+        x = [p.x for p in self.graph.points]
+        y = [p.y for p in self.graph.points]
+
+        self.points.set_data(x, y)
+        self.points.figure.canvas.draw()
+
+        self.graph.build_graph()
+
+
+
+if __name__ == "__main__":
+    start_gui()

@@ -8,6 +8,9 @@ class Point():
         self.connections = []
         self._p = val
 
+    @property
+    def tuple(self):
+        return tuple(self._p)
 
     @property
     def p(self):

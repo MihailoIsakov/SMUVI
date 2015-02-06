@@ -2,13 +2,14 @@ __author__ = 'zieghailo'
 
 import numpy as np
 from point import Point
-
+from scipy.spatial import KDTree
 
 class BetaSkeleton():
 
     def __init__(self, points=[], beta=1):
         self.points = points
         self.beta = beta
+        self.tree = None
 
     @property
     def point_val(self):
@@ -19,6 +20,16 @@ class BetaSkeleton():
         for i in range(n):
             p = Point(np.random.rand(2) * [maxx, maxy])
             self.points.append(p)
+
+
+def create_skeleton(points, beta=1):
+    tuple_list = [tuple(p.p) for p in points]
+    kdtree = KDTree(tuple_list)
+
+    for i in range(len(points)):
+        for j in range(i + 1, len(points)):
+
+
 
 
 def create_brute_skeleton(points, beta=1):
