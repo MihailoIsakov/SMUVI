@@ -9,7 +9,10 @@ class SoIGraph():
 
     def __init__(self, points):
         self.points = points
-        data = [tuple(p.p) for p in points]
+        self._build_tree()
+
+    def _build_tree(self):
+        data = [tuple(p.p) for p in self.points]
         self.kdtree = KDTree(data)
 
     @staticmethod
@@ -31,7 +34,7 @@ class SoIGraph():
         while solution is None:
             result = self.kdtree.query_ball_point(point.p, d)
             result.remove(pindex)
-            if len(result) == 0:
+            if len(result) <= 1:
                 d *= SCALING
                 continue
 
@@ -46,8 +49,10 @@ class SoIGraph():
 
 
     def build_graph(self):
+        self._build_tree()
         radii = np.zeros(len(self.points))
         for i, p in enumerate(self.points):
+            p.connections = []
             radii[i] = self.find_closest_distance(i)
 
         for i in range(len(self.points)):

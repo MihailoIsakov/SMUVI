@@ -14,9 +14,8 @@ def plot_graph(graph):
     plt.show()
 
 
-def plot_arrows(graph, fig):
-
-    ax = plt.axes()
+def plot_arrows(graph, ax):
+    # ax = plt.axes()
     for p in graph.points:
         x = p.x
         y = p.y
@@ -26,7 +25,7 @@ def plot_arrows(graph, fig):
             cy = c.y
             ax.arrow(x, y, cx-x, cy-y)
 
-    plt.show()
+    # plt.show()
 
 
 def start_gui():
@@ -38,12 +37,14 @@ def start_gui():
     ax = fig.add_subplot(111)
     ax.set_title('click to build line segments')
     line, = ax.plot([0, 100], [0, 100], 'b.')  # empty line
-    pointbuilder = PointBuilder(line, graph)
+    pointbuilder = PointBuilder(line, ax, graph)
+    fig.waitforbuttonpress(0)
 
 
 class PointBuilder:
-    def __init__(self, points, graph):
+    def __init__(self, points, ax, graph):
         self.points = points
+        self.ax = ax
         self.graph = graph
         self.cid = points.figure.canvas.mpl_connect('button_press_event', self)
 
@@ -54,10 +55,14 @@ class PointBuilder:
         x = [p.x for p in self.graph.points]
         y = [p.y for p in self.graph.points]
 
+        self.graph.build_graph()
+        plot_arrows(graph, self.ax)
+
         self.points.set_data(x, y)
         self.points.figure.canvas.draw()
 
-        self.graph.build_graph()
+        self.points.figure.waitforbuttonpress(0)
+
 
 
 
