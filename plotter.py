@@ -2,21 +2,22 @@ __author__ = 'zieghailo'
 
 import matplotlib.pyplot as plt
 
-plt.ion()
+# plt.ion()
+
+def show():
+    plt.show()
+    plt.get_current_fig_manager().full_screen_toggle()
 
 def plot_graph(graph):
-    plt.figure(1)
-
+    # plt.ion()
     x = [p.x for p in graph.points]
     y = [p.y for p in graph.points]
 
-    plt.plot(x, y, 'r*')
-    plt.show()
+    plt.plot(x, y, 'b*')
+    plt.draw()
 
 
 def plot_arrows(graph):
-    plt.figure(1)
-    ax = plt.axes()
     for p in graph.points:
         x = p.x
         y = p.y
@@ -24,10 +25,20 @@ def plot_arrows(graph):
         for c in p.connections:
             cx = c.x
             cy = c.y
-            ax.arrow(x, y, cx-x, cy-y)
+            # ax.arrow(x, y, cx-x, cy-y)
+            plt.plot([x, cx], [y, cy], 'k')
+    plt.draw()
 
-    # plt.show()
 
+def plot_visited(visited):
+    x = [p.x for p in visited]
+    y = [p.y for p in visited]
+
+    plt.plot(x, y, 'ro', ms=7)
+    plt.draw()
+
+def plot_connection(start, end):
+    plt.plot([start.x, end.x], [start.y, end.y])
 
 def start_gui(graph):
     fig = plt.figure(1)
@@ -36,6 +47,8 @@ def start_gui(graph):
     line, = ax.plot([0, 100], [0, 100], 'b.')  # empty line
     pointbuilder = PointBuilder(line, ax, graph)
     fig.waitforbuttonpress(0)
+
+    plt.show()
 
 
 class PointBuilder:
@@ -59,7 +72,7 @@ class PointBuilder:
 
         plot_graph(self.graph)
 
-        self.points.figure.waitforbuttonpress(0)
+        # self.points.figure.waitforbuttonpress(0)
 
 
 
