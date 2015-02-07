@@ -1,9 +1,12 @@
 __author__ = 'zieghailo'
 
+import sys
 import numpy as np
 from scipy.spatial import KDTree
 
 from point import Point
+
+sys.setrecursionlimit(100000)
 
 class SoIGraph():
 
@@ -20,6 +23,7 @@ class SoIGraph():
         points = [Point(np.random.rand(2) * [maxx, maxy]) for r in range(n)]
         points.append(Point(np.array([0, 0])))
         points.append(Point(np.array([maxx, maxy])))
+        print len(points)
         return SoIGraph(points)
 
     def add_point(self, x, y):
@@ -28,18 +32,17 @@ class SoIGraph():
     def find_closest_distance_index(self, pindex, SCALING=2):
         point = self.points[pindex]
 
-        d = 10
-        solution = None
+        d = 100
 
-        while solution is None:
+        while True:
             result = self.kdtree.query_ball_point(point.p, d)
             result.remove(pindex)
             if len(result) <= 1:
                 d *= SCALING
                 continue
 
-            closeness = filter(lambda x: distance(point, self.points[x]), result)
-            return np.min(closeness)
+            closeness = map(lambda x: distance(point, self.points[x]), result)
+            return np.argmin(closeness), np.min(closeness)
 
     def find_closest_distance(self, pindex, SCALING=2):
         pend = self.find_closest_distance_index(pindex, SCALING)
@@ -47,13 +50,13 @@ class SoIGraph():
         b = self.points[pend]
         return distance(a, b)
 
-
     def build_graph(self):
         self._build_tree()
         radii = np.zeros(len(self.points))
         for i, p in enumerate(self.points):
             p.connections = []
-            radii[i] = self.find_closest_distance(i)
+            ind, min = self.find_closest_distance_index(i)
+            radii[i] = min
 
         for i in range(len(self.points)):
             for j in range(i+1, len(self.points)):
