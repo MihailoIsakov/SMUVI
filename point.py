@@ -7,6 +7,7 @@ class Point():
     def __init__(self, val):
         self.connections = []
         self._p = val
+        self.price = 99999999999.0
 
     @property
     def tuple(self):

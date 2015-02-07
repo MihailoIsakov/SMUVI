@@ -38,12 +38,13 @@ def plot_visited(visited):
     plt.draw()
 
 def plot_connection(start, end):
-    plt.plot([start.x, end.x], [start.y, end.y], 'r', linewidth=2)
+    plt.plot([start.x, end.x], [start.y, end.y], 'g', linewidth=4)
 
 def start_gui(graph):
     fig = plt.figure(1)
     ax = fig.add_subplot(111)
     ax.set_title('click to build line segments')
+    ax.axis('equal')
     line, = ax.plot([0, 100], [0, 100], 'b.')  # empty line
     pointbuilder = PointBuilder(line, ax, graph)
 
