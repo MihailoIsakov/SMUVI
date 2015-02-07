@@ -13,13 +13,13 @@ def input_graph():
 
     plotter.start_gui(graph)
 
-    plotter.show()
+    # plotter.show()
     plotter.plt.ion()
     plotter.plot_graph(graph)
     plotter.plot_arrows(graph)
     plotter.show()
-    breadth_first_search(graph)
-
+    # breadth_first_search(graph)
+    depth_first_search(graph)
 
 def depth_first_search(graph):
     visited = set()

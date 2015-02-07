@@ -34,11 +34,11 @@ def plot_visited(visited):
     x = [p.x for p in visited]
     y = [p.y for p in visited]
 
-    plt.plot(x, y, 'ro', ms=7)
+    plt.plot(x, y, 'ro', ms=10)
     plt.draw()
 
 def plot_connection(start, end):
-    plt.plot([start.x, end.x], [start.y, end.y])
+    plt.plot([start.x, end.x], [start.y, end.y], 'r', linewidth=2)
 
 def start_gui(graph):
     fig = plt.figure(1)
@@ -46,9 +46,9 @@ def start_gui(graph):
     ax.set_title('click to build line segments')
     line, = ax.plot([0, 100], [0, 100], 'b.')  # empty line
     pointbuilder = PointBuilder(line, ax, graph)
+
     fig.waitforbuttonpress(0)
 
-    plt.show()
 
 
 class PointBuilder:
@@ -57,11 +57,13 @@ class PointBuilder:
         self.ax = ax
         self.graph = graph
         self.cid = points.figure.canvas.mpl_connect('button_press_event', self)
+        self.kid = points.figure.canvas.mpl_connect('key_press_event', self)
 
 
     def __call__(self, event):
         print 'click', event
         if event.inaxes!=self.points.axes: return
+
         self.graph.add_point(event.xdata, event.ydata)
         x = [p.x for p in self.graph.points]
         y = [p.y for p in self.graph.points]
@@ -72,9 +74,8 @@ class PointBuilder:
 
         plot_graph(self.graph)
 
-        # self.points.figure.waitforbuttonpress(0)
-
-
+        if event.key != 'x':
+            plt.waitforbuttonpress(0)
 
 
 if __name__ == "__main__":
